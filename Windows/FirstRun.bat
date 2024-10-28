@@ -12,7 +12,7 @@ exit
 echo Choose An option:
 echo 1. A bunch of automated things I guess
 echo 2. List Processes
-echo 3. Changing Password Policies
+echo 3. Changing Password and Lockout Policies
 echo 4. Find Files
 echo 5. Disable Remote Desktop
 echo 6. Enable Auto-Update
@@ -233,12 +233,24 @@ goto MENU
 echo "OUTPUT DONE, CHANGING PASSWORD POLICIES!"
 REM Passwords must be 10 digits
 net accounts /minpwlen:10
-REM Passwords must be changed every 30 days
-net accounts /maxpwage:30
-REM Passwords can only be changed after 5 day has passed
-net accounts /minpwage:5
+REM Passwords must be changed every 60 days
+net accounts /maxpwage:60
+REM Passwords can only be changed after 1 day has passed
+net accounts /minpwage:1
+REM Passwords can only be repeated after 3 changes
+net accounts /uniquepw:3
 REM Display current password policy
-echo "CURRENT POLICY"
+echo "CURRENT PASSWORD POLICY"
+
+echo "OUTPUT DONE, CHANGING LOCKOUT POLICIES!"
+REM Set lockout duration to 30 minutes
+net accounts /lockoutduration:30
+REM Lock user out after 10 failed password attempts
+net accounts /lockoutthreshold:10
+REM Reset failed attempts counter after 30 minutes
+net accounts /lockoutwindow:30
+REM Display current lockout policy
+echo "CURRENT LOCKOUT POLICY"
 PAUSE
 net accounts
 goto MENU
